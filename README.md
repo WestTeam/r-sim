@@ -1,11 +1,13 @@
 # r-sim
 Robot live viewer and strategy tester
 
+![](https://github.com/WestTeam/r-sim/blob/master/images/screenshot_ui.png)
+
 This UI as 2 goals:
   * See real time data from our robot
   * Evaluate strategy
 
-1Â- Real time viewer
+1Ã‚- Real time viewer
 ==
 
 A Tcp connection can be initiated with our robot in order to visualize real time
