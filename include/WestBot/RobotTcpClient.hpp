@@ -1,7 +1,7 @@
 // Copyright (c) 2019 All Rights Reserved WestBot
 
-#ifndef ROBOTCLIENT_H
-#define ROBOTCLIENT_H
+#ifndef WESTBOT_ROBOTTCPCLIENT_HPP_
+#define WESTBOT_ROBOTTCPCLIENT_HPP_
 
 #include <QObject>
 #include <QTcpSocket>
@@ -9,13 +9,15 @@
 class QByteArray;
 class QString;
 
-class RobotClient : public QObject
+namespace WestBot {
+
+class RobotTcpClient : public QObject
 {
     Q_OBJECT
 
 public:
-    RobotClient( QObject* parent = nullptr );
-    ~RobotClient() override = default;
+    RobotTcpClient( QObject* parent = nullptr );
+    ~RobotTcpClient() override = default;
 
     bool connectTo( const QString& ip, quint16 port );
     void disconnectFrom();
@@ -37,4 +39,6 @@ private:
     bool _isConnected;
 };
 
-#endif // ROBOTCLIENT_HPP_
+}
+
+#endif // WESTBOT_ROBOTTCPCLIENT_HPP_

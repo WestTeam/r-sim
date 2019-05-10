@@ -6,8 +6,8 @@
 #include <QMainWindow>
 #include <QTimer>
 
-#include "robotclient.h"
-#include <robot.h>
+#include "Robot.hpp"
+#include "RobotTcpClient.hpp"
 
 namespace Ui {
 class MainWindow;
@@ -18,7 +18,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow( QWidget* parent = nullptr );
     ~MainWindow();
 
 private slots:
@@ -28,8 +28,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    RobotClient _robotClient;
-    Robot* _robot;
+    WestBot::RobotTcpClient _robotClient;
+    WestBot::Robot* _robot;
     QTimer _gameTimer;
 };
 

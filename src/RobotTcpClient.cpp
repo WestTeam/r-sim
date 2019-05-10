@@ -3,9 +3,11 @@
 #include <QByteArray>
 #include <QString>
 
-#include "RobotClient.h"
+#include "include/WestBot/RobotTcpClient.hpp"
 
-RobotClient::RobotClient( QObject* parent )
+using namespace WestBot;
+
+RobotTcpClient::RobotTcpClient( QObject* parent )
     : QObject( parent )
     , _isConnected( false )
 {
@@ -13,17 +15,16 @@ RobotClient::RobotClient( QObject* parent )
         & _clientSocket,
         & QAbstractSocket::stateChanged,
         this,
-        & RobotClient::handleStateChange );
+        & RobotTcpClient::handleStateChange );
 
     connect(
         & _clientSocket,
         & QAbstractSocket::readyRead,
         this,
-        & RobotClient::readTcpData );
-
+        & RobotTcpClient::readTcpData );
 }
 
-bool RobotClient::connectTo( const QString& ip, quint16 port )
+bool RobotTcpClient::connectTo( const QString& ip, quint16 port )
 {
     _clientSocket.connectToHost( ip, port );
 
@@ -37,39 +38,39 @@ bool RobotClient::connectTo( const QString& ip, quint16 port )
     return _isConnected;
 }
 
-void RobotClient::disconnectFrom()
+void RobotTcpClient::disconnectFrom()
 {
     _clientSocket.disconnectFromHost();
     _isConnected = false;
 }
 
-bool RobotClient::isConnected() const
+bool RobotTcpClient::isConnected() const
 {
     return _isConnected;
 }
 
-void RobotClient::send( const QByteArray& message )
+void RobotTcpClient::send( const QByteArray& message )
 {
     _clientSocket.write( message, message.length() );
     qDebug() << "Data" << message;
 }
 
-void RobotClient::readTcpData()
+void RobotTcpClient::readTcpData()
 {
     QByteArray data = _clientSocket.readAll();
 }
 
 // Private methods
-void RobotClient::handleStateChange( QAbstractSocket::SocketState state )
+void RobotTcpClient::handleStateChange( QAbstractSocket::SocketState state )
 {
     if( state == QAbstractSocket::ConnectedState )
     {
-        emit RobotClient::connected();
+        emit RobotTcpClient::connected();
         _isConnected = true;
     }
     else
     {
-        emit RobotClient::disconnected();
+        emit RobotTcpClient::disconnected();
         _isConnected = false;
     }
 }

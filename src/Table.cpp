@@ -1,8 +1,10 @@
 // Copyright (c) 2019 All Rights Reserved WestBot
 
-#include "glwidget.h"
-
 #include <QPainter>
+
+#include "include/WestBot/Table.hpp"
+
+using namespace WestBot;
 
 namespace
 {
@@ -10,14 +12,14 @@ namespace
     const double PUCK_R = 38.1;
 }
 
-GLWidget::GLWidget(QWidget *parent)
-    : QOpenGLWidget(parent)
+Table::Table( QWidget* parent )
+    : QOpenGLWidget ( parent )
 {
     setFixedSize( 600, 400 );
     setAutoFillBackground( false );
 }
 
-void GLWidget::paintEvent(QPaintEvent *event)
+void Table::paintEvent( QPaintEvent* event )
 {
     Q_UNUSED( event );
 

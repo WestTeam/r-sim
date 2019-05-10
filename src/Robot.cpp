@@ -1,8 +1,10 @@
 // Copyright (c) 2019 All Rights Reserved WestBot
 
-#include "robot.h"
+#include "include/WestBot/Robot.hpp"
 
 #include <QPainter>
+
+using namespace WestBot;
 
 Robot::Robot(QWidget *parent)
     : QOpenGLWidget(parent)
