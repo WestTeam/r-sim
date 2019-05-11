@@ -3,19 +3,33 @@
 #ifndef WESTBOT_ROBOT_HPP_
 #define WESTBOT_ROBOT_HPP_
 
-#include <QOpenGLWidget>
+#include <QGraphicsItem>
 
 namespace WestBot {
 
-class Robot : public QOpenGLWidget
+class Robot : public QGraphicsRectItem
 {
 public:
-    Robot( QWidget* parent );
+    Robot( uint8_t type, QWidget* parent = nullptr );
 
-    void setPosition( int x, int y );
+    void setPosition( int x, int y, int angle );
 
 protected:
-    void paintEvent( QPaintEvent* event ) override;
+    void paint(
+        QPainter* painter,
+        const QStyleOptionGraphicsItem* option,
+        QWidget* widget ) override;
+
+    QPainterPath shape() const override;
+
+private:
+    void keyPressEvent( QKeyEvent* event );
+
+private:
+    qreal _angle;
+    qreal _speed;
+    uint8_t _type;
+    QColor _color;
 };
 
 }

@@ -3,19 +3,24 @@
 #ifndef WESTBOT_PUCK_HPP_
 #define WESTBOT_PUCK_HPP_
 
-#include <QOpenGLWidget>
+#include <QGraphicsWidget>
 
 namespace WestBot {
 
-class Puck : public QOpenGLWidget
+class Puck : public QGraphicsWidget
 {
 public:
-    Puck( QWidget* parent, uint8_t type );
+    Puck( uint8_t type, QWidget* parent = nullptr );
 
     void setPosition( int x, int y );
 
 protected:
-    void paintEvent( QPaintEvent* event ) override;
+    void paint(
+        QPainter* painter,
+        const QStyleOptionGraphicsItem* option,
+        QWidget* widget ) override;
+
+    QPainterPath shape() const override;
 
 private:
     uint8_t _type;

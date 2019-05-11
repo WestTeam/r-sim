@@ -4,9 +4,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsScene>
 #include <QTimer>
 
-#include "Robot.hpp"
 #include "RobotTcpClient.hpp"
 
 namespace Ui {
@@ -27,11 +27,10 @@ private slots:
     void on_moveBtn_clicked();
 
 private:
-    Ui::MainWindow *ui;
     WestBot::RobotTcpClient _robotClient;
-    WestBot::Robot* _robot;
-
+    QGraphicsScene* _scene;
     QTimer _gameTimer;
+    Ui::MainWindow *ui;
 };
 
 #endif // MAINWINDOW_H
