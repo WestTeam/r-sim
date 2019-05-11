@@ -6,7 +6,15 @@
 #include "include/WestBot/mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "include/WestBot/Puck.hpp"
 #include "include/WestBot/Table.hpp"
+#include "include/WestBot/Robot.hpp"
+
+namespace
+{
+    const double COEFF_REDUC = 0.2;
+    const double PUCK_R = 38.1;
+}
 
 MainWindow::MainWindow( QWidget* parent )
     : QMainWindow( parent )
@@ -17,6 +25,7 @@ MainWindow::MainWindow( QWidget* parent )
 
     _gameTimer.setInterval( 25 );
 
+    static int ang = 0;
     connect(
         & _gameTimer,
         & QTimer::timeout,
@@ -24,13 +33,28 @@ MainWindow::MainWindow( QWidget* parent )
         [ this ]()
         {
             _robot->move( _robot->pos().x() + 1, _robot->pos().y() );
+            //_robot->setZRotation( ang+=10 );
         } );
 
     WestBot::Table* table = new WestBot::Table( this );
     table->move( 0, 0 );
 
     _robot = new WestBot::Robot( this );
-    _robot->move( 25, 90 );
+    _robot->show();
+
+    //_robot->move( 25, 90 );
+
+    WestBot::Puck* red1;
+    red1 = new WestBot::Puck( this, 0 );
+    red1->setPosition(
+        ( 500.0 - PUCK_R ) * COEFF_REDUC,
+        ( 450.0 - PUCK_R ) * COEFF_REDUC );
+
+    WestBot::Puck* green1;
+    green1 = new WestBot::Puck( this, 1 );
+    green1->setPosition(
+        ( 500.0 - PUCK_R ) * COEFF_REDUC,
+        ( 1050.0 - PUCK_R ) * COEFF_REDUC );
 
     ui->robotConStatus->setPixmap(
         QPixmap::fromImage( QImage( ":/resources/con_nok.png" ) ) );

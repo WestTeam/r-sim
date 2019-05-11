@@ -9,5 +9,6 @@
         <file>resources/zone_yellow.png</file>
         <file>resources/con_nok.png</file>
         <file>resources/con_ok.png</file>
+        <file>resources/robot.png</file>
     </qresource>
 </RCC>

@@ -21,6 +21,7 @@ SOURCES += \
         src/main.cpp \
         src/mainwindow.cpp \
         src/Table.cpp \
+        src/Puck.cpp \
         src/RobotTcpClient.cpp \
         src/Robot.cpp
 
@@ -28,6 +29,7 @@ HEADERS += \
         include/WestBot/mainwindow.h \
         include/WestBot/Table.hpp \
         include/WestBot/RobotTcpClient.hpp \
+        include/WestBot/Puck.hpp \
         include/WestBot/Robot.hpp
 
 FORMS += mainwindow.ui

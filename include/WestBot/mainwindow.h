@@ -30,6 +30,7 @@ private:
     Ui::MainWindow *ui;
     WestBot::RobotTcpClient _robotClient;
     WestBot::Robot* _robot;
+
     QTimer _gameTimer;
 };
 
