@@ -57,7 +57,9 @@ void RobotTcpClient::send( const QByteArray& message )
 
 void RobotTcpClient::readTcpData()
 {
-    QByteArray data = _clientSocket.readAll();
+    _clientSocket.read( (char*) & _dataRcv.objectId, sizeof( SimData ) );
+
+    qDebug() << ">>>>RCV DATA" << _dataRcv.objectPos.x;
 }
 
 // Private methods
