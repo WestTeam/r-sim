@@ -21,7 +21,14 @@ RobotTcpClient::RobotTcpClient( QObject* parent )
         & _clientSocket,
         & QAbstractSocket::readyRead,
         this,
-        & RobotTcpClient::readTcpData );
+        [ this ]()
+        {
+            _clientSocket.read( (char*) & _dataRcv.objectId, sizeof( SimData ) );
+
+            qDebug() << ">>>>RCV DATA" << _dataRcv.objectPos.x;
+            emit updatePos( _dataRcv.objectPos.x, _dataRcv.objectPos.y );
+        });
+        //& RobotTcpClient::readTcpData );
 }
 
 bool RobotTcpClient::connectTo( const QString& ip, quint16 port )
@@ -34,6 +41,8 @@ bool RobotTcpClient::connectTo( const QString& ip, quint16 port )
         return _isConnected;
     }
 
+    _clientSocket.readAll();
+    _clientSocket.flush();
     _isConnected = true;
     return _isConnected;
 }
@@ -60,6 +69,8 @@ void RobotTcpClient::readTcpData()
     _clientSocket.read( (char*) & _dataRcv.objectId, sizeof( SimData ) );
 
     qDebug() << ">>>>RCV DATA" << _dataRcv.objectPos.x;
+
+    emit updatePos( _dataRcv.objectPos.x, _dataRcv.objectPos.y );
 }
 
 // Private methods

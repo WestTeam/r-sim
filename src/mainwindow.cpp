@@ -146,6 +146,16 @@ MainWindow::MainWindow( QWidget* parent )
             ui->robotConStatus->setPixmap(
                 QPixmap::fromImage( QImage( ":/resources/con_nok.png" ) ) );
         } );
+
+    connect(
+        & _robotClient,
+        & WestBot::RobotTcpClient::updatePos,
+        this,
+        [ r1 ]( int x, int y )
+        {
+            qDebug() << "get signal" << x << y;
+            r1->setPos( x, y );
+        } );
 }
 
 MainWindow::~MainWindow()

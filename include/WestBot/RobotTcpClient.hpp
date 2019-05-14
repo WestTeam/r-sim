@@ -49,6 +49,8 @@ signals:
     void connected();
     void disconnected();
 
+    void updatePos( int x, int y );
+
 private:
     void handleStateChange( QAbstractSocket::SocketState state );
 
