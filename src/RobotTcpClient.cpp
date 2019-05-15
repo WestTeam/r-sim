@@ -23,7 +23,10 @@ RobotTcpClient::RobotTcpClient( QObject* parent )
         this,
         [ this ]()
         {
-            _clientSocket.read( (char*) & _dataRcv.objectId, sizeof( SimData ) );
+            QByteArray toto = _clientSocket.readAll();
+            qDebug() << toto;
+
+            //_clientSocket.read( ( char *) & _dataRcv.objectId, sizeof( SimData ) );
 
             switch( _dataRcv.objectType )
             {
@@ -46,16 +49,14 @@ RobotTcpClient::RobotTcpClient( QObject* parent )
                 break;
 
             default:
-                // UNKNOWN
                 return;
             }
         });
-        //& RobotTcpClient::readTcpData );
 }
 
 bool RobotTcpClient::connectTo( const QString& ip, quint16 port )
 {
-    _clientSocket.connectToHost( ip, port );
+    _clientSocket.connectToHost( "localhost", port );
 
     if( ! _clientSocket.waitForConnected( 3000 ) )
     {
@@ -65,6 +66,7 @@ bool RobotTcpClient::connectTo( const QString& ip, quint16 port )
 
     _clientSocket.readAll();
     _clientSocket.flush();
+
     _isConnected = true;
     return _isConnected;
 }

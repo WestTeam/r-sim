@@ -15,7 +15,7 @@ namespace
 MainWindow::MainWindow( QWidget* parent )
     : QMainWindow( parent )
     , ui( new Ui::MainWindow )
-    , _robotClient( this )
+    , _robotClient( new WestBot::ClientStuff( "localhost", 4242 ) )
     , _scene( nullptr )
 {
     ui->setupUi( this );
@@ -33,8 +33,7 @@ MainWindow::MainWindow( QWidget* parent )
 
     _scene->setItemIndexMethod( QGraphicsScene::NoIndex );
 
-    /*
-    WestBot::Robot* r1 = new WestBot::Robot( 0 );
+/*    WestBot::Robot* r1 = new WestBot::Robot( 0 );
     r1->setRect( -30, -30, 60, 60 ); // change the rect from 0x0 (default) to 100x100 pixels
     r1->setPos( 280 * 0.2, 600 * 0.2 );
     r1->setFlag( QGraphicsItem::ItemIsFocusable );
@@ -114,17 +113,35 @@ MainWindow::MainWindow( QWidget* parent )
         QPixmap::fromImage( QImage( ":/resources/con_nok.png" ) ) );
 
     connect(
-        & _robotClient,
-        & WestBot::RobotTcpClient::connected,
+        _robotClient,
+        & WestBot::ClientStuff::hasReadSome,
         this,
-        [ this ]()
+        [ this ]( WestBot::SimData data )
         {
-            ui->robotConStatus->setPixmap(
-                QPixmap::fromImage( QImage( ":/resources/con_ok.png" ) ) );
-            ui->connectBtn->setText( "Disconnect" );
+            qDebug() << "RCV SOMETHING" << data.objectPos.x;
         } );
 
     connect(
+        _robotClient,
+        & WestBot::ClientStuff::statusChanged,
+        this,
+        [ this ]( bool status )
+        {
+            if( status )
+            {
+                ui->robotConStatus->setPixmap(
+                    QPixmap::fromImage( QImage( ":/resources/con_ok.png" ) ) );
+                ui->connectBtn->setText( "Disconnect" );
+            }
+            else
+            {
+                ui->connectBtn->setText( "Connect" );
+                ui->robotConStatus->setPixmap(
+                    QPixmap::fromImage( QImage( ":/resources/con_nok.png" ) ) );
+            }
+        } );
+
+    /*connect(
         & _robotClient,
         & WestBot::RobotTcpClient::disconnected,
         this,
@@ -134,10 +151,10 @@ MainWindow::MainWindow( QWidget* parent )
             ui->robotConStatus->setPixmap(
                 QPixmap::fromImage( QImage( ":/resources/con_nok.png" ) ) );
         } );
-
+    */
     connect(
-        & _robotClient,
-        & WestBot::RobotTcpClient::updateRobotPos,
+        _robotClient,
+        & WestBot::ClientStuff::updateRobotPos,
         this,
         [ this ](
             uint8_t id,
@@ -147,7 +164,6 @@ MainWindow::MainWindow( QWidget* parent )
             int theta )
         {
             qDebug() << "Robot get signal" << id << " " << color << " " << x << " " << y << " " << theta;
-
             if( _robots.isEmpty() || ! _robots.contains( id )  )
             {
                 // No robot yet on the map or not the good one. create one
@@ -159,12 +175,14 @@ MainWindow::MainWindow( QWidget* parent )
             }
             else
             {
+                //qDebug() << ">>>>>> HERE";
+                /*
                 const WestBot::Robot::Ptr& robot = _robots.value( id );
                 robot->setPos( x * 0.2, y * 0.2 );
-                robot->setRotation( theta );
+                robot->setRotation( theta );*/
             }
         } );
-
+    /*
     connect(
         & _robotClient,
         & WestBot::RobotTcpClient::updatePuckPos,
@@ -194,6 +212,7 @@ MainWindow::MainWindow( QWidget* parent )
                 puck->setPos( x * 0.2, y * 0.2 );
             }
         } );
+        */
 }
 
 MainWindow::~MainWindow()
@@ -204,21 +223,19 @@ MainWindow::~MainWindow()
 void MainWindow::on_connectBtn_clicked()
 {
     bool ok;
-    if( _robotClient.isConnected() )
+    if( _robotClient->getStatus() )
     {
-        _robotClient.disconnectFrom();
+        _robotClient->closeConnection();
         return;
     }
 
-    _robotClient.connectTo(
-        ui->hostTxt->text(),
-        ui->portTxt->text().toInt( & ok, 10 ) );
+    _robotClient->connect2host();
 
-    if( ! _robotClient.isConnected() )
+    /*if( ! _robotClient->getStatus() )
     {
         qDebug() << "Failed to connect to Robot";
         return;
-    }
+    }*/
 }
 
 void MainWindow::on_moveBtn_clicked()

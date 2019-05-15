@@ -9,7 +9,7 @@
 
 #include "Puck.hpp"
 #include "Robot.hpp"
-#include "RobotTcpClient.hpp"
+#include "clientstuff.h"
 
 namespace Ui {
 class MainWindow;
@@ -29,7 +29,8 @@ private slots:
     void on_moveBtn_clicked();
 
 private:
-    WestBot::RobotTcpClient _robotClient;
+    //WestBot::RobotTcpClient _robotClient;
+    WestBot::ClientStuff* _robotClient;
     QGraphicsScene* _scene;
     QHash< uint8_t, WestBot::Robot::Ptr > _robots;
     QHash< uint8_t, WestBot::Puck::Ptr > _pucks;
