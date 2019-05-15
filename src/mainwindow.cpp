@@ -160,7 +160,7 @@ MainWindow::MainWindow( QWidget* parent )
             else
             {
                 const WestBot::Robot::Ptr& robot = _robots.value( id );
-                robot->setPos( x, y );
+                robot->setPos( x * 0.2, y * 0.2 );
                 robot->setRotation( theta );
             }
         } );
@@ -191,7 +191,7 @@ MainWindow::MainWindow( QWidget* parent )
             else
             {
                 const WestBot::Puck::Ptr& puck = _pucks.value( id );
-                puck->setPos( x, y );
+                puck->setPos( x * 0.2, y * 0.2 );
             }
         } );
 }
