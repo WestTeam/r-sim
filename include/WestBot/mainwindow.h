@@ -41,7 +41,6 @@ private:
     QHash< uint8_t, WestBot::Puck::Ptr > _pucks;
     QTimer _updateTimer;
     WestBot::SimData _lastData;
-    WestBot::Robot robot;
     Ui::MainWindow *ui;
 };
 

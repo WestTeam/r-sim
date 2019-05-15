@@ -16,7 +16,6 @@ MainWindow::MainWindow( QWidget* parent )
     : QMainWindow( parent )
     , ui( new Ui::MainWindow )
     , _robotClient( new WestBot::ClientStuff( "localhost", 4242 ) )
-    , robot( 0 )
     , _scene( nullptr )
 {
     ui->setupUi( this );
@@ -36,7 +35,7 @@ MainWindow::MainWindow( QWidget* parent )
 
     _scene->setItemIndexMethod( QGraphicsScene::NoIndex );
 
-    WestBot::Robot* r1 = new WestBot::Robot( 0 );
+    /*WestBot::Robot* r1 = new WestBot::Robot( 0 );
     r1->setRect( -30, -30, 60, 60 ); // change the rect from 0x0 (default) to 100x100 pixels
     r1->setPos( 280 * 0.2, 600 * 0.2 );
     r1->setFlag( QGraphicsItem::ItemIsFocusable );
@@ -107,22 +106,35 @@ MainWindow::MainWindow( QWidget* parent )
     blue1B->setPos( 1900.0 * 0.2, 1050.0 * 0.2 );
     blue1B->setFlag( QGraphicsItem::ItemIsFocusable );
     _scene->addItem( blue1B );
+    */
 
-    ui->gameView->setRenderHint( QPainter::Antialiasing );
+    /*ui->gameView->setRenderHint( QPainter::Antialiasing );
     ui->gameView->setCacheMode(QGraphicsView::CacheBackground);
     ui->gameView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+    */
 
     ui->robotConStatus->setPixmap(
         QPixmap::fromImage( QImage( ":/resources/con_nok.png" ) ) );
+
+    QRectF rect(-30, -30,30,30);
+    QBrush myBrush(Qt::yellow);
+
+    QGraphicsRectItem *rItem1 = new QGraphicsRectItem( rect );
+        _scene->addItem(rItem1);
+        rItem1->setPos(0, 0 );
+        rItem1->setBrush(myBrush);
 
     connect(
         _robotClient,
         & WestBot::ClientStuff::hasReadSome,
         this,
-        [ this ]( WestBot::SimData data )
+        [ this, rItem1 ]( WestBot::SimData data )
         {
             //_lastData = data;
-            //qDebug() << "RCV SOMETHING" << data.objectPos.x;
+            qDebug() << "RCV SOMETHING" << data.objectPos.x;
+            rItem1->setPos( data.objectPos.x, data.objectPos.y  );
+            //ui->debugTxt->move( data.objectPos.x, data.objectPos.y );
+
             //_robots.value( 0 )->moveBy( rand() % 300 + 1, 20 );
         } );
 
@@ -146,38 +158,38 @@ MainWindow::MainWindow( QWidget* parent )
             }
         } );
 
-    connect(
-        & _updateTimer,
-        & QTimer::timeout,
-        this,
-        [ this ]()
-        {
-            if( _robots.isEmpty() || ! _robots.contains( 0 )  )
-            {
-                // No robot yet on the map or not the good one. create one
-                WestBot::Robot::Ptr robot =
-                    std::make_shared< WestBot::Robot >( 0 );
-                _robots.insert( 0, robot );
-                robot->setRect( -30, -30, 60, 60 ); // change the rect from 0x0 (default) to 100x100 pixels
-                _scene->addItem( robot.get() );
-            }
-            else
-            {
-                /*WestBot::SimData _data;
+//    connect(
+//        & _updateTimer,
+//        & QTimer::timeout,
+//        this,
+//        [ this ]()
+//        {
+//            if( _robots.isEmpty() || ! _robots.contains( 0 )  )
+//            {
+//                // No robot yet on the map or not the good one. create one
+//                WestBot::Robot::Ptr robot =
+//                    std::make_shared< WestBot::Robot >( 0 );
+//                _robots.insert( 0, robot );
+//                robot->setRect( -30, -30, 60, 60 ); // change the rect from 0x0 (default) to 100x100 pixels
+//                _scene->addItem( robot.get() );
+//            }
+//            else
+//            {
+//                /*WestBot::SimData _data;
 
-                _data.objectId = 0;
-                _data.objectPos.x = rand() % 600 + 1;
-                _data.objectPos.y = rand() % 400 + 1;
-                _data.objectPos.theta = rand() % 360 + 1;
-                _data.objectType = 0;
-                _data.objectColor = 0;
-                _data.objectSize = 100.0;
-                _data.objectMode = 0;*/
-                const WestBot::Robot::Ptr& robot = _robots.value( 0 );
-                robot->setPos( rand() % 600 + 1, rand() % 400 + 1 );
-                //robot->setRotation( _lastData.objectPos.theta );
-            }
-        } );
+//                _data.objectId = 0;
+//                _data.objectPos.x = rand() % 600 + 1;
+//                _data.objectPos.y = rand() % 400 + 1;
+//                _data.objectPos.theta = rand() % 360 + 1;
+//                _data.objectType = 0;
+//                _data.objectColor = 0;
+//                _data.objectSize = 100.0;
+//                _data.objectMode = 0;*/
+//                const WestBot::Robot::Ptr& robot = _robots.value( 0 );
+//                robot->setPos( rand() % 600 + 1, rand() % 400 + 1 );
+//                //robot->setRotation( _lastData.objectPos.theta );
+//            }
+//        } );
 
     /*connect(
         & _robotClient,
@@ -191,43 +203,43 @@ MainWindow::MainWindow( QWidget* parent )
         } );
     */
 
-    connect(
-        _robotClient,
-        & WestBot::ClientStuff::updateRobotPos,
-        this,
-        [ this ](
-            uint8_t id,
-            uint8_t color,
-            int x,
-            int y,
-            int theta )
-        {
-            qDebug() << "Robot get signal" << id << " " << color << " " << x << " " << y << " " << theta;
+//    connect(
+//        _robotClient,
+//        & WestBot::ClientStuff::updateRobotPos,
+//        this,
+//        [ this ](
+//            uint8_t id,
+//            uint8_t color,
+//            int x,
+//            int y,
+//            int theta )
+//        {
+//            qDebug() << "Robot get signal" << id << " " << color << " " << x << " " << y << " " << theta;
 
-            QString debug = QString( "Update robot pos: %1 %2 %3").arg( x ).arg( y ).arg( theta );
-            ui->debugTxt->append( debug );
-            /*
-            if( _robots.isEmpty() || ! _robots.contains( id )  )
-            {
-                qDebug() << ">>>>>> HERE 1";
+//            QString debug = QString( "Update robot pos: %1 %2 %3").arg( x ).arg( y ).arg( theta );
+//            ui->debugTxt->append( debug );
+//            /*
+//            if( _robots.isEmpty() || ! _robots.contains( id )  )
+//            {
+//                qDebug() << ">>>>>> HERE 1";
 
-                // No robot yet on the map or not the good one. create one
-                WestBot::Robot::Ptr robot =
-                    std::make_shared< WestBot::Robot >( color );
-                _robots.insert( id, robot );
+//                // No robot yet on the map or not the good one. create one
+//                WestBot::Robot::Ptr robot =
+//                    std::make_shared< WestBot::Robot >( color );
+//                _robots.insert( id, robot );
 
-                emit updateMap();
-                robot->setRect( -30, -30, 60, 60 ); // change the rect from 0x0 (default) to 100x100 pixels
-                //_scene->addItem( robot.get() );
-            }
-            else
-            {
-                qDebug() << ">>>>>> HERE 2";
-                const WestBot::Robot::Ptr& robot = _robots.value( id );
-                robot->setPos( x * 0.2, y * 0.2 );
-                robot->setRotation( theta );
-            }*/
-        } );
+//                emit updateMap();
+//                robot->setRect( -30, -30, 60, 60 ); // change the rect from 0x0 (default) to 100x100 pixels
+//                //_scene->addItem( robot.get() );
+//            }
+//            else
+//            {
+//                qDebug() << ">>>>>> HERE 2";
+//                const WestBot::Robot::Ptr& robot = _robots.value( id );
+//                robot->setPos( x * 0.2, y * 0.2 );
+//                robot->setRotation( theta );
+//            }*/
+//        } );
 
 //    connect(
 //        this,
