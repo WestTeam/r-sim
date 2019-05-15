@@ -6,6 +6,8 @@
 #include <QHash>
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include <QTimer>
+#include <QThread>
 
 #include "Puck.hpp"
 #include "Robot.hpp"
@@ -23,6 +25,9 @@ public:
     explicit MainWindow( QWidget* parent = nullptr );
     ~MainWindow();
 
+signals:
+    void updateMap();
+
 private slots:
     void on_connectBtn_clicked();
 
@@ -34,7 +39,9 @@ private:
     QGraphicsScene* _scene;
     QHash< uint8_t, WestBot::Robot::Ptr > _robots;
     QHash< uint8_t, WestBot::Puck::Ptr > _pucks;
-
+    QTimer _updateTimer;
+    WestBot::SimData _lastData;
+    WestBot::Robot robot;
     Ui::MainWindow *ui;
 };
 
