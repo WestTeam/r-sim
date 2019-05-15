@@ -3,6 +3,8 @@
 #ifndef WESTBOT_ROBOT_HPP_
 #define WESTBOT_ROBOT_HPP_
 
+#include <memory>
+
 #include <QGraphicsItem>
 
 namespace WestBot {
@@ -10,6 +12,8 @@ namespace WestBot {
 class Robot : public QGraphicsRectItem
 {
 public:
+    using Ptr = std::shared_ptr< Robot >;
+
     Robot( uint8_t type, QWidget* parent = nullptr );
 
     void setPosition( int x, int y, int angle );

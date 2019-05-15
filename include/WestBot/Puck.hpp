@@ -3,13 +3,17 @@
 #ifndef WESTBOT_PUCK_HPP_
 #define WESTBOT_PUCK_HPP_
 
-#include <QGraphicsWidget>
+#include <memory>
+
+#include <QGraphicsItem>
 
 namespace WestBot {
 
-class Puck : public QGraphicsWidget
+class Puck : public QGraphicsRectItem
 {
 public:
+    using Ptr = std::shared_ptr< Puck >;
+
     Puck( uint8_t type, QWidget* parent = nullptr );
 
     void setPosition( int x, int y );
@@ -21,6 +25,9 @@ protected:
         QWidget* widget ) override;
 
     QPainterPath shape() const override;
+
+private:
+    void keyPressEvent( QKeyEvent* event );
 
 private:
     uint8_t _type;

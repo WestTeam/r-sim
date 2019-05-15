@@ -6,9 +6,6 @@
 #include "include/WestBot/mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "include/WestBot/Puck.hpp"
-#include "include/WestBot/Robot.hpp"
-
 namespace
 {
     const double COEFF_REDUC = 0.2;
@@ -23,8 +20,6 @@ MainWindow::MainWindow( QWidget* parent )
 {
     ui->setupUi( this );
 
-    _gameTimer.setInterval( 100 );
-
     _scene = new QGraphicsScene();
     _scene->setSceneRect( 0, 0, 600, 400 );
 
@@ -38,6 +33,7 @@ MainWindow::MainWindow( QWidget* parent )
 
     _scene->setItemIndexMethod( QGraphicsScene::NoIndex );
 
+    /*
     WestBot::Robot* r1 = new WestBot::Robot( 0 );
     r1->setRect( -30, -30, 60, 60 ); // change the rect from 0x0 (default) to 100x100 pixels
     r1->setPos( 280 * 0.2, 600 * 0.2 );
@@ -105,22 +101,14 @@ MainWindow::MainWindow( QWidget* parent )
     _scene->addItem( green2B );
 
     WestBot::Puck* blue1B = new WestBot::Puck( 2 );
+    blue1B->setRect( -30, -30, 60, 60 ); // change the rect from 0x0 (default) to 100x100 pixels
     blue1B->setPos( 1900.0 * 0.2, 1050.0 * 0.2 );
+    blue1B->setFlag( QGraphicsItem::ItemIsFocusable );
     _scene->addItem( blue1B );
-
+*/
     ui->gameView->setRenderHint( QPainter::Antialiasing );
     ui->gameView->setCacheMode(QGraphicsView::CacheBackground);
     ui->gameView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-
-    static int ang = 0;
-    connect(
-        & _gameTimer,
-        & QTimer::timeout,
-        this,
-        [ r1 ]()
-        {
-            r1->moveBy( 10, 0 );
-        } );
 
     ui->robotConStatus->setPixmap(
         QPixmap::fromImage( QImage( ":/resources/con_nok.png" ) ) );
@@ -149,12 +137,62 @@ MainWindow::MainWindow( QWidget* parent )
 
     connect(
         & _robotClient,
-        & WestBot::RobotTcpClient::updatePos,
+        & WestBot::RobotTcpClient::updateRobotPos,
         this,
-        [ r1 ]( int x, int y )
+        [ this ](
+            uint8_t id,
+            uint8_t color,
+            int x,
+            int y,
+            int theta )
         {
-            qDebug() << "get signal" << x << y;
-            r1->setPos( x, y );
+            qDebug() << "Robot get signal" << id << " " << color << " " << x << " " << y << " " << theta;
+
+            if( _robots.isEmpty() || ! _robots.contains( id )  )
+            {
+                // No robot yet on the map or not the good one. create one
+                WestBot::Robot::Ptr robot =
+                    std::make_shared< WestBot::Robot >( color );
+                _robots.insert( id, robot );
+                robot->setRect( -30, -30, 60, 60 ); // change the rect from 0x0 (default) to 100x100 pixels
+                _scene->addItem( robot.get() );
+            }
+            else
+            {
+                const WestBot::Robot::Ptr& robot = _robots.value( id );
+                robot->setPos( x, y );
+                robot->setRotation( theta );
+            }
+        } );
+
+    connect(
+        & _robotClient,
+        & WestBot::RobotTcpClient::updatePuckPos,
+        this,
+        [ this ](
+            uint8_t id,
+            uint8_t color,
+            int x,
+            int y,
+            bool onTable )
+        {
+            qDebug() << "Puck get signal" << id << " " << color << " " << x << " " << y << " " << onTable;
+
+            if( _pucks.isEmpty() || ! _pucks.contains( id )  )
+            {
+                // No puck yet on the map or not the good one. create one
+
+                WestBot::Puck::Ptr puck =
+                    std::make_shared< WestBot::Puck >( color );
+                _pucks.insert( id, puck );
+                puck->setRect( -(15.24/2), -(15.24/2), 15.24, 15.24 );
+                _scene->addItem( puck.get() );
+            }
+            else
+            {
+                const WestBot::Puck::Ptr& puck = _pucks.value( id );
+                puck->setPos( x, y );
+            }
         } );
 }
 
@@ -185,5 +223,5 @@ void MainWindow::on_connectBtn_clicked()
 
 void MainWindow::on_moveBtn_clicked()
 {
-    _gameTimer.start();
+    // TODO: XXX
 }

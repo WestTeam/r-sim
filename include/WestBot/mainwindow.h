@@ -3,10 +3,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QHash>
 #include <QMainWindow>
 #include <QGraphicsScene>
-#include <QTimer>
 
+#include "Puck.hpp"
+#include "Robot.hpp"
 #include "RobotTcpClient.hpp"
 
 namespace Ui {
@@ -29,7 +31,9 @@ private slots:
 private:
     WestBot::RobotTcpClient _robotClient;
     QGraphicsScene* _scene;
-    QTimer _gameTimer;
+    QHash< uint8_t, WestBot::Robot::Ptr > _robots;
+    QHash< uint8_t, WestBot::Puck::Ptr > _pucks;
+
     Ui::MainWindow *ui;
 };
 

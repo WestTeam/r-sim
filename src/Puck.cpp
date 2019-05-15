@@ -1,5 +1,6 @@
 // Copyright (c) 2019 All Rights Reserved WestBot
 
+#include <QKeyEvent>
 #include <QPainter>
 
 #include "include/WestBot/Puck.hpp"
@@ -37,6 +38,7 @@ void Puck::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 
     painter->drawEllipse( -( 15.24 / 2 ), -( 15.24 / 2), 15.24, 15.24 );
     painter->setRenderHint( QPainter::Antialiasing );
+    update();
 }
 
 QPainterPath Puck::shape() const
@@ -44,4 +46,32 @@ QPainterPath Puck::shape() const
     QPainterPath path;
     path.addRect( -(15.24/2), -(15.24/2), 15.24, 15.24 );
     return path;
+}
+
+//
+// Private methods
+//
+void Puck::keyPressEvent( QKeyEvent* event )
+{
+    // THIS IS FOR TEST PURPOSE ONLY
+    if( event->key() == Qt::Key_Left )
+    {
+        setPos( x() - 10, y() );
+    }
+    else if( event->key() == Qt::Key_Right )
+    {
+        setPos( x() + 10, y() );
+    }
+    else if( event->key() == Qt::Key_Up )
+    {
+        setPos( x(), y() - 10 );
+    }
+    else if( event->key() == Qt::Key_Down )
+    {
+        setPos( x(), y() + 10 );
+    }
+    else if( event->key() == Qt::Key_Space )
+    {
+        // DO NOTHING
+    }
 }

@@ -20,7 +20,8 @@ Robot::Robot( uint8_t type, QWidget* parent )
 
 void Robot::setPosition( int x, int y, int angle )
 {
-    //setPos( x, y, angle );
+    setPos( x, y );
+    //setRotation( angle );
 }
 
 //

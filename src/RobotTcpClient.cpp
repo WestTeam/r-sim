@@ -25,8 +25,30 @@ RobotTcpClient::RobotTcpClient( QObject* parent )
         {
             _clientSocket.read( (char*) & _dataRcv.objectId, sizeof( SimData ) );
 
-            qDebug() << ">>>>RCV DATA" << _dataRcv.objectPos.x;
-            emit updatePos( _dataRcv.objectPos.x, _dataRcv.objectPos.y );
+            switch( _dataRcv.objectType )
+            {
+            case 0: // ROBOT
+                emit updateRobotPos(
+                    _dataRcv.objectId,
+                    _dataRcv.objectColor,
+                    _dataRcv.objectPos.x,
+                    _dataRcv.objectPos.y,
+                    _dataRcv.objectPos.theta );
+                break;
+
+            case 1: // PUCK
+                emit updatePuckPos(
+                    _dataRcv.objectId,
+                    _dataRcv.objectColor,
+                    _dataRcv.objectPos.x,
+                    _dataRcv.objectPos.y,
+                    _dataRcv.objectMode == 0 ? true : false );
+                break;
+
+            default:
+                // UNKNOWN
+                return;
+            }
         });
         //& RobotTcpClient::readTcpData );
 }
@@ -66,11 +88,12 @@ void RobotTcpClient::send( const QByteArray& message )
 
 void RobotTcpClient::readTcpData()
 {
-    _clientSocket.read( (char*) & _dataRcv.objectId, sizeof( SimData ) );
+    /*_clientSocket.read( (char*) & _dataRcv.objectId, sizeof( SimData ) );
 
     qDebug() << ">>>>RCV DATA" << _dataRcv.objectPos.x;
 
     emit updatePos( _dataRcv.objectPos.x, _dataRcv.objectPos.y );
+    */
 }
 
 // Private methods
