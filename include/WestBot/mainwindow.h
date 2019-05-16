@@ -6,8 +6,6 @@
 #include <QHash>
 #include <QMainWindow>
 #include <QGraphicsScene>
-#include <QTimer>
-#include <QThread>
 
 #include "Puck.hpp"
 #include "Robot.hpp"
@@ -33,14 +31,14 @@ private slots:
 
     void on_moveBtn_clicked();
 
+    void on_startBtn_clicked();
+
 private:
     //WestBot::RobotTcpClient _robotClient;
     WestBot::ClientStuff* _robotClient;
     QGraphicsScene* _scene;
     QHash< uint8_t, WestBot::Robot::Ptr > _robots;
     QHash< uint8_t, WestBot::Puck::Ptr > _pucks;
-    QTimer _updateTimer;
-    WestBot::SimData _lastData;
     Ui::MainWindow *ui;
 };
 

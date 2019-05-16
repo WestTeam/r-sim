@@ -20,8 +20,6 @@ MainWindow::MainWindow( QWidget* parent )
 {
     ui->setupUi( this );
 
-    _updateTimer.setInterval( 150 );
-
     _scene = new QGraphicsScene();
     _scene->setSceneRect( 0, 0, 600, 400 );
 
@@ -38,35 +36,65 @@ MainWindow::MainWindow( QWidget* parent )
     ui->robotConStatus->setPixmap(
         QPixmap::fromImage( QImage( ":/resources/con_nok.png" ) ) );
 
-    // ================================== //
-
-    // THIS IS WORKING
-    QRectF rect(-30, -30,30,30);
-    QBrush myBrush(Qt::yellow);
-
-    QGraphicsRectItem *rob = new QGraphicsRectItem( rect );
-        _scene->addItem(rob);
-        rob->setPos(0, 0 );
-        rob->setBrush(myBrush);
-
-
-   // THIS IS NOT !!!
-   /* WestBot::Robot* rob = new WestBot::Robot( 0 );
-    _scene->addItem(rob);
-    rob->setPos(0, 0 );
-    */
-
     connect(
-        _robotClient,
-        & WestBot::ClientStuff::hasReadSome,
-        this,
-        [ this, rob ]( WestBot::SimData data )
-        {
-            qDebug() << "RCV SOMETHING" << data.objectPos.x << data.objectPos.y;
-            rob->setPos( data.objectPos.x, data.objectPos.y  );
-        } );
+           _robotClient,
+           & WestBot::ClientStuff::updateRobotPos,
+           this,
+           [ this ](
+               uint8_t id,
+               uint8_t color,
+               int x,
+               int y,
+               int theta )
+           {
+               if( _robots.isEmpty() || ! _robots.contains( id )  )
+               {
+                   // No robot yet on the map or not the good one. create one
+                   WestBot::Robot::Ptr robot =
+                       std::make_shared< WestBot::Robot >( color );
+                   _robots.insert( id, robot );
+                   _scene->addItem( robot.get() );
+                   robot->setPos( x * 0.2, y * 0.2  );
+                   robot->setRotation( theta );
+               }
+               else
+               {
+                   const auto& robot = _robots.value( id );
+                   robot->setPos( x * 0.2, y * 0.2  );
+                   robot->setRotation( theta );
+               }
 
-    // ================================== //
+               _scene->update();
+           } );
+
+       connect(
+           _robotClient,
+           & WestBot::ClientStuff::updatePuckPos,
+           this,
+           [ this ](
+               uint8_t id,
+               uint8_t color,
+               int x,
+               int y,
+               bool onTable )
+           {
+               if( _pucks.isEmpty() || ! _pucks.contains( id )  )
+               {
+                   // No puck yet on the map or not the good one. create one
+                   WestBot::Puck::Ptr puck =
+                       std::make_shared< WestBot::Puck >( color );
+                   _pucks.insert( id, puck );
+                   _scene->addItem( puck.get() );
+                   puck->setPos( x * 0.2, y * 0.2  );
+               }
+               else
+               {
+                   const auto& puck = _pucks.value( id );
+                   puck->setPos( x * 0.2, y * 0.2  );
+               }
+
+               _scene->update();
+           } );
 
     connect(
         _robotClient,
@@ -109,4 +137,9 @@ void MainWindow::on_connectBtn_clicked()
 void MainWindow::on_moveBtn_clicked()
 {
     // TODO: XXX
+}
+
+void MainWindow::on_startBtn_clicked()
+{
+    _robotClient->send( "start" );
 }

@@ -36,7 +36,7 @@ void Robot::paint(
         scene()->collidingItems(this).isEmpty() ? _color : Qt::red );
     painter->drawRect( -30, -30, 60, 60 );
     painter->setRenderHint( QPainter::Antialiasing );
-    update();
+    //update();
 }
 
 QPainterPath Robot::shape() const

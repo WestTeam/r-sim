@@ -72,7 +72,7 @@ void ClientStuff::readyRead()
 */
         SimData data;
         tcpSocket->read( (char*) & data.objectId, sizeof ( SimData ) );
-/*
+
         switch( data.objectType )
         {
         case 0: // ROBOT
@@ -96,14 +96,7 @@ void ClientStuff::readyRead()
         default:
             return;
         }
-    */
-        emit updateRobotPos(
-            data.objectId,
-            data.objectColor,
-            data.objectPos.x,
-            data.objectPos.y,
-            data.objectPos.theta );
-        emit hasReadSome(data);
+
         //m_nNextBlockSize = 0;
     //}
 }
@@ -142,4 +135,10 @@ void ClientStuff::closeConnection()
         status = false;
         emit statusChanged(status);
     }
+}
+
+void ClientStuff::send( const QByteArray& message )
+{
+    tcpSocket->write( message, message.length() );
+    qDebug() << "Data" << message;
 }

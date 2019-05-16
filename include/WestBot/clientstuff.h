@@ -36,6 +36,8 @@ public:
     QTcpSocket *tcpSocket;
     bool getStatus();
 
+    void send( const QByteArray& message );
+
 public slots:
     void closeConnection();
     void connect2host();

@@ -38,7 +38,7 @@ void Puck::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 
     painter->drawEllipse( -( 15.24 / 2 ), -( 15.24 / 2), 15.24, 15.24 );
     painter->setRenderHint( QPainter::Antialiasing );
-    update();
+    //update();
 }
 
 QPainterPath Puck::shape() const
