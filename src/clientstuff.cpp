@@ -97,6 +97,8 @@ void ClientStuff::readyRead()
             return;
         }
 
+        emit hasReadSome( data );
+
         //m_nNextBlockSize = 0;
     //}
 }

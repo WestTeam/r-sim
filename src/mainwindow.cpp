@@ -37,6 +37,19 @@ MainWindow::MainWindow( QWidget* parent )
         QPixmap::fromImage( QImage( ":/resources/con_nok.png" ) ) );
 
     connect(
+        _robotClient,
+        & WestBot::ClientStuff::hasReadSome,
+        this,
+        [ this ]( WestBot::SimData data )
+        {
+            QString str = QString( "SimData: X: %1 Y: %2 Theta: %3" )
+                .arg( data.objectPos.x )
+                .arg( data.objectPos.y )
+                .arg( data.objectPos.theta );
+            ui->telemTxt->append( str );
+        } );
+
+    connect(
            _robotClient,
            & WestBot::ClientStuff::updateRobotPos,
            this,
@@ -142,4 +155,9 @@ void MainWindow::on_moveBtn_clicked()
 void MainWindow::on_startBtn_clicked()
 {
     _robotClient->send( "start" );
+}
+
+void MainWindow::on_pushButton_6_clicked()
+{
+    ui->telemTxt->clear();
 }
