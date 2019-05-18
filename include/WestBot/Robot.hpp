@@ -16,6 +16,9 @@ public:
 
     Robot( uint8_t type, QWidget* parent = nullptr );
 
+    void moveArmLeft( int x, int y );
+    void moveArmRight( int x, int y );
+
     void setPosition( int x, int y, int angle );
 
 protected:
@@ -34,6 +37,9 @@ private:
     qreal _speed;
     uint8_t _type;
     QColor _color;
+
+    QGraphicsRectItem _armLeft;
+    QGraphicsRectItem _armRight;
 };
 
 }
