@@ -49,8 +49,8 @@ signals:
     void connected();
     void disconnected();
 
-    void updateRobotPos( uint8_t id, uint8_t color, int x, int y, int theta );
-    void updatePuckPos( uint8_t id, uint8_t color, int x, int y, bool onTable = true );
+    void updateRobotPos( uint8_t id, uint8_t color, double x, double y, double theta );
+    void updatePuckPos( uint8_t id, uint8_t color, double x, double y, bool onTable = true );
 
 private:
     void handleStateChange( QAbstractSocket::SocketState state );

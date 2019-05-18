@@ -6,6 +6,11 @@
 #include "include/WestBot/mainwindow.h"
 #include "ui_mainwindow.h"
 
+#define M_PI 3.1415
+
+#define DEG(x) ((x) * (180.0 / M_PI))
+#define RAD(x) ((x) * M_PI / 180.0)
+
 namespace
 {
     const double COEFF_REDUC = 0.2;
@@ -56,9 +61,9 @@ MainWindow::MainWindow( QWidget* parent )
            [ this ](
                uint8_t id,
                uint8_t color,
-               int x,
-               int y,
-               int theta )
+               double x,
+               double y,
+               double theta )
            {
                if( _robots.isEmpty() || ! _robots.contains( id )  )
                {
@@ -68,13 +73,13 @@ MainWindow::MainWindow( QWidget* parent )
                    _robots.insert( id, robot );
                    _scene->addItem( robot.get() );
                    robot->setPos( x * 0.2, y * 0.2  );
-                   robot->setRotation( theta );
+                   robot->setRotation( DEG( theta ) );
                }
                else
                {
                    const auto& robot = _robots.value( id );
                    robot->setPos( x * 0.2, y * 0.2  );
-                   robot->setRotation( theta );
+                   robot->setRotation( DEG( theta ) );
                }
 
                _scene->update();
@@ -87,8 +92,8 @@ MainWindow::MainWindow( QWidget* parent )
            [ this ](
                uint8_t id,
                uint8_t color,
-               int x,
-               int y,
+               double x,
+               double y,
                bool onTable )
            {
                if( _pucks.isEmpty() || ! _pucks.contains( id )  )
