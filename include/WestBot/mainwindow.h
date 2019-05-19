@@ -35,6 +35,10 @@ private slots:
 
     void on_pushButton_6_clicked();
 
+    void on_hardstopBtn_clicked();
+
+    void on_colorBtn_clicked();
+
 private:
     //WestBot::RobotTcpClient _robotClient;
     WestBot::ClientStuff* _robotClient;

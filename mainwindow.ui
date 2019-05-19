@@ -17,8 +17,8 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>100</y>
+      <x>660</x>
+      <y>340</y>
       <width>21</width>
       <height>16</height>
      </rect>
@@ -30,8 +30,8 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>120</y>
+      <x>660</x>
+      <y>360</y>
       <width>21</width>
       <height>16</height>
      </rect>
@@ -43,8 +43,8 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>700</x>
-      <y>140</y>
+      <x>640</x>
+      <y>380</y>
       <width>41</width>
       <height>16</height>
      </rect>
@@ -56,8 +56,8 @@
    <widget class="QLineEdit" name="xPos">
     <property name="geometry">
      <rect>
-      <x>740</x>
-      <y>100</y>
+      <x>680</x>
+      <y>340</y>
       <width>113</width>
       <height>21</height>
      </rect>
@@ -69,8 +69,8 @@
    <widget class="QLineEdit" name="yPos">
     <property name="geometry">
      <rect>
-      <x>740</x>
-      <y>120</y>
+      <x>680</x>
+      <y>360</y>
       <width>113</width>
       <height>21</height>
      </rect>
@@ -82,8 +82,8 @@
    <widget class="QLineEdit" name="anglePos">
     <property name="geometry">
      <rect>
-      <x>740</x>
-      <y>140</y>
+      <x>680</x>
+      <y>380</y>
       <width>113</width>
       <height>21</height>
      </rect>
@@ -131,8 +131,8 @@
    <widget class="QPushButton" name="moveBtn">
     <property name="geometry">
      <rect>
-      <x>880</x>
-      <y>110</y>
+      <x>820</x>
+      <y>350</y>
       <width>82</width>
       <height>32</height>
      </rect>
@@ -238,18 +238,38 @@
      <enum>Qt::ScrollBarAlwaysOff</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="startBtn">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>210</y>
-      <width>82</width>
+      <x>630</x>
+      <y>100</y>
+      <width>305</width>
       <height>32</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Start strat</string>
-    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="startBtn">
+       <property name="text">
+        <string>Tirette</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="hardstopBtn">
+       <property name="text">
+        <string>Hard stop</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="colorBtn">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <action name="actionEdit">

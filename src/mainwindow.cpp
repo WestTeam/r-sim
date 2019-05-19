@@ -15,6 +15,9 @@ namespace
 {
     const double COEFF_REDUC = 0.2;
     const double PUCK_R = 38.1;
+
+    const int TRANSFORM_X = 1500; // because origin of the map is not on top-left corner :)
+    const int TRANSFORM_Y = 1;
 }
 
 MainWindow::MainWindow( QWidget* parent )
@@ -40,6 +43,8 @@ MainWindow::MainWindow( QWidget* parent )
 
     ui->robotConStatus->setPixmap(
         QPixmap::fromImage( QImage( ":/resources/con_nok.png" ) ) );
+
+    ui->colorBtn->setStyleSheet( "background-color: yellow" );
 
     connect(
         _robotClient,
@@ -72,13 +77,13 @@ MainWindow::MainWindow( QWidget* parent )
                        std::make_shared< WestBot::Robot >( color );
                    _robots.insert( id, robot );
                    _scene->addItem( robot.get() );
-                   robot->setPos( x * 0.2, y * 0.2  );
+                   robot->setPos( ( x + TRANSFORM_X ) * 0.2, y * 0.2  );
                    robot->setRotation( DEG( theta ) );
                }
                else
                {
                    const auto& robot = _robots.value( id );
-                   robot->setPos( x * 0.2, y * 0.2  );
+                   robot->setPos( ( x + TRANSFORM_X ) * 0.2, y * 0.2  );
                    robot->setRotation( DEG( theta ) );
                }
 
@@ -103,12 +108,12 @@ MainWindow::MainWindow( QWidget* parent )
                        std::make_shared< WestBot::Puck >( color );
                    _pucks.insert( id, puck );
                    _scene->addItem( puck.get() );
-                   puck->setPos( x * 0.2, y * 0.2  );
+                   puck->setPos( ( x + TRANSFORM_X ) * 0.2, y * 0.2  );
                }
                else
                {
                    const auto& puck = _pucks.value( id );
-                   puck->setPos( x * 0.2, y * 0.2  );
+                   puck->setPos( ( x + TRANSFORM_X ) * 0.2, y * 0.2  );
                }
 
                _scene->update();
@@ -165,4 +170,26 @@ void MainWindow::on_startBtn_clicked()
 void MainWindow::on_pushButton_6_clicked()
 {
     ui->telemTxt->clear();
+}
+
+void MainWindow::on_hardstopBtn_clicked()
+{
+    _robotClient->send( "stop" );
+}
+
+void MainWindow::on_colorBtn_clicked()
+{
+    static int colorCnt = 1;
+    if( colorCnt % 2 == 0 )
+    {
+        _robotClient->send( "color0" );
+        ui->colorBtn->setStyleSheet( "background-color: yellow" );
+    }
+    else
+    {
+        _robotClient->send( "color1" );
+        ui->colorBtn->setStyleSheet( "background-color: magenta" );
+    }
+
+    ++colorCnt;
 }
