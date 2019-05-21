@@ -82,13 +82,18 @@ MainWindow::MainWindow( QWidget* parent )
                    _robots.insert( id, robot );
                    _scene->addItem( robot.get() );
                    robot->setPos( ( y + TRANSFORM_Y ) * COEFF_REDUC, x * COEFF_REDUC ); // X and Y are reversed in robot-rock table
-                   robot->setRotation( DEG( theta ) - 90 );
+                   qDebug() << DEG( theta ) << DEG( theta ) - 90;
+
+                   robot->setRotation((DEG( theta ) - 90.0)*-1.0);
                }
                else
                {
                    const auto& robot = _robots.value( id );
                    robot->setPos( ( y + TRANSFORM_Y ) * COEFF_REDUC, x * COEFF_REDUC ); // X and Y are reversed in robot-rock table
-                   robot->setRotation( DEG( theta ) - 90 );
+                   qDebug() << DEG( theta ) << DEG( theta ) - 90;
+
+                   //robot->setRotation( 0);
+                   robot->setRotation((DEG( theta ) - 90.0)*-1.0 );
                }
 
                _scene->update();
