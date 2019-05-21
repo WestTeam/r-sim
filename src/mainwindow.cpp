@@ -14,10 +14,7 @@
 namespace
 {
     const double COEFF_REDUC = 0.2;
-    const double PUCK_R = 38.1;
-
-    const int TRANSFORM_X = 1500; // because origin of the map is not on top-left corner :)
-    const int TRANSFORM_Y = 1;
+    const int TRANSFORM_Y = 1500;
 }
 
 MainWindow::MainWindow( QWidget* parent )
@@ -45,6 +42,13 @@ MainWindow::MainWindow( QWidget* parent )
         QPixmap::fromImage( QImage( ":/resources/con_nok.png" ) ) );
 
     ui->colorBtn->setStyleSheet( "background-color: yellow" );
+
+//    // Draw particle accelerator
+//    QRect accelerator1( );
+//    QGraphicsRectItem acc1( accelerator1() );
+//    acc1.setBrush( Qt::black );
+//    _scene->addItem( & acc1 );
+//    acc1.setPos( 10, 10 );
 
     connect(
         _robotClient,
@@ -77,13 +81,13 @@ MainWindow::MainWindow( QWidget* parent )
                        std::make_shared< WestBot::Robot >( color );
                    _robots.insert( id, robot );
                    _scene->addItem( robot.get() );
-                   robot->setPos( ( x + TRANSFORM_X ) * 0.2, y * 0.2  );
+                   robot->setPos( ( y + TRANSFORM_Y ) * COEFF_REDUC, x * COEFF_REDUC ); // X and Y are reversed in robot-rock table
                    robot->setRotation( DEG( theta ) );
                }
                else
                {
                    const auto& robot = _robots.value( id );
-                   robot->setPos( ( x + TRANSFORM_X ) * 0.2, y * 0.2  );
+                   robot->setPos( ( y + TRANSFORM_Y ) * COEFF_REDUC, x * COEFF_REDUC ); // X and Y are reversed in robot-rock table
                    robot->setRotation( DEG( theta ) );
                }
 
@@ -108,12 +112,13 @@ MainWindow::MainWindow( QWidget* parent )
                        std::make_shared< WestBot::Puck >( color );
                    _pucks.insert( id, puck );
                    _scene->addItem( puck.get() );
-                   puck->setPos( ( x + TRANSFORM_X ) * 0.2, y * 0.2  );
+                   puck->setPos( ( y + TRANSFORM_Y ) * COEFF_REDUC, x * COEFF_REDUC ); // X and Y are reversed in robot-rock table
+
                }
                else
                {
                    const auto& puck = _pucks.value( id );
-                   puck->setPos( ( x + TRANSFORM_X ) * 0.2, y * 0.2  );
+                   puck->setPos( ( y + TRANSFORM_Y ) * COEFF_REDUC, x * COEFF_REDUC ); // X and Y are reversed in robot-rock table
                }
 
                _scene->update();
