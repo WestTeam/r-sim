@@ -43,6 +43,16 @@ MainWindow::MainWindow( QWidget* parent )
 
     ui->colorBtn->setStyleSheet( "background-color: yellow" );
 
+    QPoint topLeft( 126, 126 );
+    QPoint botRigh( 366, 366 );
+    QRect obstacle( topLeft, botRigh );
+    //QGraphicsRectItem obs( obstacle );
+    QGraphicsRectItem* item1 = new QGraphicsRectItem( obstacle );
+
+    item1->setBrush( Qt::red );
+    _scene->addItem( item1 );
+    //obs.setPos( 10, 10 );
+
 //    // Draw particle accelerator
 //    QRect accelerator1( );
 //    QGraphicsRectItem acc1( accelerator1() );
